@@ -78,8 +78,10 @@ class AuthorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Author $author)
+    public function destroy(Author $author): RedirectResponse 
     {
-        //
+        $author->delete();
+
+        return redirect(route('authors.index'));
     }
 }
