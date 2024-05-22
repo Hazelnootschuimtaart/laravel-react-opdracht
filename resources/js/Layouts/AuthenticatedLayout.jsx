@@ -27,6 +27,9 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('authors.index')} active={route().current('authors.index')}>
                                     Authors
                                 </NavLink>
+                                <NavLink href={route('books.index')} active={route().current('books.index')}>
+                                    Books
+                                </NavLink>
                             </div>
                         </div>
 
@@ -100,6 +103,9 @@ export default function Authenticated({ user, header, children }) {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('authors.index')} active={route().current('authors.index')}>
                             Authors
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('books.index')} active={route().current('books.index')}>
+                            Books
                         </ResponsiveNavLink>
                     </div>
 
