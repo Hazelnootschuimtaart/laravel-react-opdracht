@@ -3,8 +3,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm, Head } from '@inertiajs/react';
+import Book from "@/Components/Book";
  
-export default function Index({ auth, books, authors }) {
+export default function Index({ auth, books, authors, authornames }) {
     const { data, setData, post, processing, reset, errors } = useForm({
          title: '',
          author_id: 1,
@@ -63,8 +64,8 @@ return (
                     <PrimaryButton className="mt-4" disabled={processing}>Save book</PrimaryButton>
                 </form>
                 <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                    {books.map(book =>
-                        <Book key={book.id} book={book} />
+                    {books.map((book, index) =>
+                        <Book key={book.id} book={book} authorname={authornames[index]} />
                     )}
                 </div>
             </div>

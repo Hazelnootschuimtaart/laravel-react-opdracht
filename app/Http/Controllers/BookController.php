@@ -16,9 +16,19 @@ class BookController extends Controller
      */
     public function index(): Response
     {
+        $books = Book::all();
+        $authorlist=array();
+ 
+        foreach ($books as $book) {
+            $thisauthor = $book->author->name;
+            array_push($authorlist, $thisauthor);
+        }
+
         return Inertia::render('Books/Index', [
-            'books' => Book::with('author:name')->get(),
+            'books' => Book::all(),
+            // 'books' => Book::with('author:name')->get(),
             'authors' => Author::all(),
+            'authornames' => $authorlist,
         ]);
     }
 

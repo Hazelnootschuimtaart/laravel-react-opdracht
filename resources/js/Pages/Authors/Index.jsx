@@ -56,7 +56,7 @@ export default function Index({ auth, authors }) {
                 </form>
                 <h2 className="mt-6 shadow-sm rounded-lg divide-y">List of authors:</h2>
                 <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                    
+
                     {authors.map(author =>
                         <Author key={author.id} author={author} />
                     )}

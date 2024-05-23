@@ -42,7 +42,7 @@ Route::resource('authors', AuthorController::class)
 ->middleware(['auth', 'verified']);
 
 Route::resource('books', BookController::class)
-->only(['index', 'store'])
+->only(['index', 'store', 'update'])
 ->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

@@ -6,6 +6,10 @@ import { useForm, usePage } from '@inertiajs/react';
 
 export default function Author({ author }) {
 
+// De ene keer update ie wel bij edit, daarna niet meer. Via netwerk kijken, daar ziet de aanvraag er wel goed uit, daar klopt ie wel. Maar er wordt niets mee gedaan
+// en komt ook niet in de database terecht.
+
+
     const { auth } = usePage().props;
     const [editing, setEditing] = useState(false);
     const { data, setData, patch, clearErrors, reset, errors } = useForm({
