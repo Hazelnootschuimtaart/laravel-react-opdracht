@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,7 +17,8 @@ class BookController extends Controller
     public function index(): Response
     {
         return Inertia::render('Books/Index', [
-            //
+            'books' => Book::with('author:name')->get(),
+            'authors' => Author::all(),
         ]);
     }
 
@@ -35,11 +37,15 @@ class BookController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:45',
+            'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
             'publication_date' => 'date',
             'genre' => 'string|max:45',
         ]);
 
+        // $validated->authors_id = 1;
+
         Book::create($validated);
+        // $request->author()-books()->create($validated);
 
         return redirect(route('books.index'));
     }

@@ -22,7 +22,7 @@ export default function Index({ auth, authors }) {
             <Head title="Authors" />
 
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-                <h2>Add a new author</h2>
+                <h2 className="my-6 shadow-sm rounded-lg divide-y">Add a new author</h2>
                 <form onSubmit={submit}>
                     <input
                         type="text"
@@ -54,7 +54,9 @@ export default function Index({ auth, authors }) {
                     <InputError message={errors.message} className="mt-2" />
                     <PrimaryButton className="mt-4" disabled={processing}>Save author</PrimaryButton>
                 </form>
+                <h2 className="mt-6 shadow-sm rounded-lg divide-y">List of authors:</h2>
                 <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
+                    
                     {authors.map(author =>
                         <Author key={author.id} author={author} />
                     )}
