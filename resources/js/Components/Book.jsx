@@ -21,7 +21,7 @@ export default function Book({ book, authors, authorname }) {
 
     const selectChange = (e) => {
         setData('author_id', e.target.value);
-        };
+    };
 
     return (
         <div className="p-6 flex space-x-2">
@@ -40,8 +40,8 @@ export default function Book({ book, authors, authorname }) {
                                 Edit
                             </button>
                             <Dropdown.Link as="button" href={route('books.destroy', book.id)} method="delete">
-                            Delete
-                        </Dropdown.Link>
+                                Delete
+                            </Dropdown.Link>
                         </Dropdown.Content>
                     </Dropdown>
                     {book.created_at !== book.updated_at && <small className="text-sm text-gray-600"> &middot; edited</small>}
@@ -81,11 +81,23 @@ export default function Book({ book, authors, authorname }) {
                         />
                         <InputError message={errors.message} className="mt-2" />
                         <div className="space-x-2">
-                                <PrimaryButton className="mt-4">Save changes</PrimaryButton>
-                                <button className="mt-4" onClick={() => { setEditing(false); reset(); clearErrors(); }}>Cancel</button>
-                            </div>
+                            <PrimaryButton className="mt-4">Save changes</PrimaryButton>
+                            <button className="mt-4" onClick={() => { setEditing(false); reset(); clearErrors(); }}>Cancel</button>
+                        </div>
                     </form>
-                    : <p>{book.title}, {authorname}, {book.publication_date}, {book.genre}</p>
+                    : <div>
+                        <div>
+                            <span className="font-semibold">Title:</span> {book.title}
+                        </div>
+                        <div>
+                            <span className="font-semibold">Author:</span> {authorname}
+                        </div>
+                        <div><span className="font-semibold">Publication date:</span> {book.publication_date}
+                        </div>
+                        <div>
+                            <span className="font-semibold">Genre:</span> {book.genre}
+                        </div>
+                    </div>
                 }
             </div>
         </div>

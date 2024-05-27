@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,10 @@ Route::resource('authors', AuthorController::class)
 
 Route::resource('books', BookController::class)
 ->only(['index', 'store', 'update', 'destroy'])
+->middleware(['auth', 'verified']);
+
+Route::resource('reservations', ReservationController::class)
+->only(['index', 'store'])
 ->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

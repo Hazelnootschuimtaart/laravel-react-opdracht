@@ -30,6 +30,9 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('books.index')} active={route().current('books.index')}>
                                     Books
                                 </NavLink>
+                                <NavLink href={route('reservations.index')} active={route().current('reservations.index')}>
+                                    Reservations
+                                </NavLink>
                             </div>
                         </div>
 
@@ -106,6 +109,9 @@ export default function Authenticated({ user, header, children }) {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('books.index')} active={route().current('books.index')}>
                             Books
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('reservations.index')} active={route().current('reservations.index')}>
+                            Reservations
                         </ResponsiveNavLink>
                     </div>
 
