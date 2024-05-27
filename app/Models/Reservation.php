@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Reservation extends Model
 {
     use HasFactory;
+
+    // one to one relatie nodig?
 }

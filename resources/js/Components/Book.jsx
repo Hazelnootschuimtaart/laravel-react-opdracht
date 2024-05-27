@@ -23,6 +23,10 @@ export default function Book({ book, authors, authorname }) {
         setData('author_id', e.target.value);
     };
 
+    const reserveBook = () => {
+        post(route('reservations.store', book.id));
+    }
+
     return (
         <div className="p-6 flex space-x-2">
             <div>
@@ -97,6 +101,7 @@ export default function Book({ book, authors, authorname }) {
                         <div>
                             <span className="font-semibold">Genre:</span> {book.genre}
                         </div>
+                        <button className="bg-cyan-400 hover:bg-cyan-500 rounded-md p-2" onClick={(e) => reserveBook(e)}>Reserve book</button>
                     </div>
                 }
             </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -30,9 +31,20 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:45',
+            'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
+            'publication_date' => 'date',
+            'genre' => 'string|max:45',
+        ]);
+
+        // relatie nodig?
+
+        Reservation::create($validated);
+
+        return redirect(route('reservations.index'));
     }
 
     /**

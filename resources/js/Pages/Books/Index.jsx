@@ -90,7 +90,15 @@ Via de reservations-versie van:
     const submit = (e) => {
         e.preventDefault();
         post(route('books.store'), { onSuccess: () => reset() });
-    };
+  };
+        - knop aanmaken in Book
+        - als klik op knop, dan 
+        de reservations-versie van:
+    const submit = (e) => {
+        e.preventDefault();
+        post(route('books.store'), { onSuccess: () => reset() });
+
+  Ben nu bezig met alles goed zetten voor het kunnen 'storen' van het gereserveerde boek, mócht het werken. Zodat ik het kan testen.
 
              */}
 
