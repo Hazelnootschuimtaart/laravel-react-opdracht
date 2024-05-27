@@ -5,11 +5,6 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm, usePage } from '@inertiajs/react';
 
 export default function Author({ author }) {
-
-    // De ene keer update ie wel bij edit, daarna niet meer. Via netwerk kijken, daar ziet de aanvraag er wel goed uit, daar klopt ie wel. Maar er wordt niets mee gedaan
-    // en komt ook niet in de database terecht.
-
-
     const { auth } = usePage().props;
     const [editing, setEditing] = useState(false);
     const { data, setData, patch, clearErrors, reset, errors } = useForm({
@@ -79,7 +74,7 @@ export default function Author({ author }) {
                             />
                             <InputError message={errors.message} className="mt-2" />
                             <div className="space-x-2">
-                                <PrimaryButton className="mt-4">Save</PrimaryButton>
+                                <PrimaryButton className="mt-4">Save changes</PrimaryButton>
                                 <button className="mt-4" onClick={() => { setEditing(false); reset(); clearErrors(); }}>Cancel</button>
                             </div>
                         </form>

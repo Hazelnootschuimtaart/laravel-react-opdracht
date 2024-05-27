@@ -4,11 +4,9 @@ import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm, usePage } from '@inertiajs/react';
 
-export default function Book({ book, authorname }) {
+export default function Book({ book, authors, authorname }) {
     const { auth } = usePage().props;
-
     const [editing, setEditing] = useState(false);
-
     const { data, setData, patch, clearErrors, reset, errors } = useForm({
         title: book.title,
         author_id: book.author_id,
@@ -20,6 +18,10 @@ export default function Book({ book, authorname }) {
         e.preventDefault();
         patch(route('books.update', book.id), { onSuccess: () => setEditing(false) });
     };
+
+    const selectChange = (e) => {
+        setData('author_id', e.target.value);
+        };
 
     return (
         <div className="p-6 flex space-x-2">
@@ -37,8 +39,12 @@ export default function Book({ book, authorname }) {
                             <button className="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:bg-gray-100 transition duration-150 ease-in-out" onClick={() => setEditing(true)}>
                                 Edit
                             </button>
+                            <Dropdown.Link as="button" href={route('books.destroy', book.id)} method="delete">
+                            Delete
+                        </Dropdown.Link>
                         </Dropdown.Content>
                     </Dropdown>
+                    {book.created_at !== book.updated_at && <small className="text-sm text-gray-600"> &middot; edited</small>}
                 </div>
                 {editing
                     ? <form onSubmit={submit}>
@@ -74,7 +80,10 @@ export default function Book({ book, authorname }) {
                             id="book-genre"
                         />
                         <InputError message={errors.message} className="mt-2" />
-                        <PrimaryButton className="mt-4" disabled={processing}>Save book</PrimaryButton>
+                        <div className="space-x-2">
+                                <PrimaryButton className="mt-4">Save changes</PrimaryButton>
+                                <button className="mt-4" onClick={() => { setEditing(false); reset(); clearErrors(); }}>Cancel</button>
+                            </div>
                     </form>
                     : <p>{book.title}, {authorname}, {book.publication_date}, {book.genre}</p>
                 }

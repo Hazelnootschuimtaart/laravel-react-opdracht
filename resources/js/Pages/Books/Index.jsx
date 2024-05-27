@@ -65,7 +65,7 @@ return (
                 </form>
                 <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
                     {books.map((book, index) =>
-                        <Book key={book.id} book={book} authorname={authornames[index]} />
+                        <Book key={book.id} book={book} authors={authors} authorname={authornames[index]} />
                     )}
                 </div>
             </div>

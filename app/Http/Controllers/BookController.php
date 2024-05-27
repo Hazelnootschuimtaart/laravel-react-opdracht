@@ -79,19 +79,27 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Book $book): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:45',
+            'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
+            'publication_date' => 'date',
+            'genre' => 'string|max:45',
+        ]);
+
+        $book->update($validated);
+
+        return redirect(route('books.index'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book): RedirectResponse
     {
-        //
+        $book->delete();
+
+        return redirect(route('books.index'));
     }
 }
-
-// $request->user()->chirps()->create($validated);
-// Ik probeer een beetje na te denken over de relationship tussen books en authors.
