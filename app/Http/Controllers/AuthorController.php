@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Author;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -66,7 +67,7 @@ class AuthorController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:45',
-            'email' => 'string|email|max:45|unique:authors,email',
+            'email' => ['string', 'email', 'max:45', Rule::unique('authors')->ignore($author->id)],
             'age' => 'integer|min:0|max:125',
         ]);
 

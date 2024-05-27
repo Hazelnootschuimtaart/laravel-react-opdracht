@@ -6,8 +6,8 @@ import { useForm, usePage } from '@inertiajs/react';
 
 export default function Author({ author }) {
 
-// De ene keer update ie wel bij edit, daarna niet meer. Via netwerk kijken, daar ziet de aanvraag er wel goed uit, daar klopt ie wel. Maar er wordt niets mee gedaan
-// en komt ook niet in de database terecht.
+    // De ene keer update ie wel bij edit, daarna niet meer. Via netwerk kijken, daar ziet de aanvraag er wel goed uit, daar klopt ie wel. Maar er wordt niets mee gedaan
+    // en komt ook niet in de database terecht.
 
 
     const { auth } = usePage().props;
@@ -20,6 +20,7 @@ export default function Author({ author }) {
 
     const submit = (e) => {
         e.preventDefault();
+        // console.log(data, editing, errors);
         patch(route('authors.update', author.id), { onSuccess: () => setEditing(false) });
     };
 
@@ -49,7 +50,6 @@ export default function Author({ author }) {
                 <div>
                     {editing
                         ? <form onSubmit={submit}>
-
                             <input
                                 type="text"
                                 placeholder="Name"
@@ -87,8 +87,6 @@ export default function Author({ author }) {
                     }
                 </div>
             </div>
-
         </>
-
     )
 }
