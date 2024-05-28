@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,10 +15,11 @@ class ReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index()
     {
+        // return Book::with('reservations')->get();
         return Inertia::render('Reservations/Index',[
-            //
+            'booksWithReservationOfCurrentUser' => Book::with('reservations')->get(),
         ]);
     }
 
@@ -31,8 +34,10 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, string $id): RedirectResponse
     {
+        // Author::find(author.id)
+
         $validated = $request->validate([
             'title' => 'required|string|max:45',
             'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',

@@ -7,6 +7,7 @@ import { useForm, usePage } from '@inertiajs/react';
 export default function Book({ book, authors, authorname }) {
     const { auth } = usePage().props;
     const [editing, setEditing] = useState(false);
+    const [reservedBooks, setReservedBooks] = useState([]);
     const { data, setData, patch, clearErrors, reset, errors } = useForm({
         title: book.title,
         author_id: book.author_id,
@@ -24,6 +25,7 @@ export default function Book({ book, authors, authorname }) {
     };
 
     const reserveBook = () => {
+        // miss ipv dit een state updaten met id boek pushen?
         post(route('reservations.store', book.id));
     }
 
@@ -101,7 +103,8 @@ export default function Book({ book, authors, authorname }) {
                         <div>
                             <span className="font-semibold">Genre:</span> {book.genre}
                         </div>
-                        <button className="bg-cyan-400 hover:bg-cyan-500 rounded-md p-2" onClick={(e) => reserveBook(e)}>Reserve book</button>
+                        <button className="bg-cyan-400 hover:bg-cyan-500 rounded-md p-2" onClick={(e) => setReservedBooks((prevState) => prevState + book.id)}>Reserve book</button>
+                        {/* <button className="bg-cyan-400 hover:bg-cyan-500 rounded-md p-2" onClick={(e) => reserveBook(e, book.id, authorname)}>Reserve book</button> */}
                     </div>
                 }
             </div>
