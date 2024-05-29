@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Author;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -92,16 +93,45 @@ class BookController extends Controller
 
         $book->update($validated);
 
-        $book->reservations()->sync($book);
+        $user = auth()->user();
+
+        if ($request->reserved == true) {
+            $book->reservations()->attach($user->id);
+        }
 
         // iets maken om de reserveringen weer te kunnen verwijderen, bijvoorbeeld dit, waarbij er een popup/modal moet komen waarbij je 'detach' moet intypen (of misschien
         // op een andere manier "detach" invoeren). Hieronder checkt hij dan wat er is ingetypt en dan voert ie de code uit.
-        if ($request->detach == "detach") {
-            $book->reservations()->detach($book);
+        else {
+            $book->reservations()->detach($user->id);
         }
 
         return redirect(route('books.index'));
     }
+
+    // BACKUP UPDATE() MET SYNC
+    // public function update(Request $request, Book $book): RedirectResponse
+    // {
+    //     $validated = $request->validate([
+    //         'title' => 'required|string|max:45',
+    //         'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
+    //         'publication_date' => 'date',
+    //         'genre' => 'string|max:45',
+    //         'reserved' => 'required|boolean',
+    //     ]);
+
+    //     $book->update($validated);
+
+    //     $book->reservations()->sync($book);
+
+    //     // iets maken om de reserveringen weer te kunnen verwijderen, bijvoorbeeld dit, waarbij er een popup/modal moet komen waarbij je 'detach' moet intypen (of misschien
+    //     // op een andere manier "detach" invoeren). Hieronder checkt hij dan wat er is ingetypt en dan voert ie de code uit.
+    //     if ($request->detach == "detach") {
+    //         $book->reservations()->detach($book);
+    //     }
+
+    //     return redirect(route('books.index'));
+    // }
+
 
     /**
      * Remove the specified resource from storage.
