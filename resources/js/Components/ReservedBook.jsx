@@ -18,6 +18,3 @@ export default function ReservedBook( {book} ) {
         </div>
     )
 }
-
-
-// knopje maken om boek te kunnen reserveren, uitzoeken hoe de users-books relatie ook alweer werkt.

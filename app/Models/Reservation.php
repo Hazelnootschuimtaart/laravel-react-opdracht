@@ -15,9 +15,4 @@ class Reservation extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    // public function book(): HasOne
-    // {
-    //     return $this->hasOne(Book::class);
-    // }
 }

@@ -50,6 +50,7 @@ class BookController extends Controller
             'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
             'publication_date' => 'date',
             'genre' => 'string|max:45',
+            'reserved' => 'required|boolean',
         ]);
 
         // $validated->authors_id = 1;
@@ -86,9 +87,18 @@ class BookController extends Controller
             'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
             'publication_date' => 'date',
             'genre' => 'string|max:45',
+            'reserved' => 'required|boolean',
         ]);
 
         $book->update($validated);
+
+        $book->reservations()->sync($book);
+
+        // iets maken om de reserveringen weer te kunnen verwijderen, bijvoorbeeld dit, waarbij er een popup/modal moet komen waarbij je 'detach' moet intypen (of misschien
+        // op een andere manier "detach" invoeren). Hieronder checkt hij dan wat er is ingetypt en dan voert ie de code uit.
+        if ($request->detach == "detach") {
+            $book->reservations()->detach($book);
+        }
 
         return redirect(route('books.index'));
     }

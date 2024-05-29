@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Dropdown from '@/Components/Dropdown';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
+import Modal from "./Modal";
 import { useForm, usePage } from '@inertiajs/react';
 
 export default function Book({ book, authors, authorname }) {
@@ -13,6 +14,8 @@ export default function Book({ book, authors, authorname }) {
         author_id: book.author_id,
         publication_date: book.publication_date,
         genre: book.genre,
+        reserved: book.reserved,
+        //detach: xxx,
     });
 
     const submit = (e) => {
@@ -23,11 +26,6 @@ export default function Book({ book, authors, authorname }) {
     const selectChange = (e) => {
         setData('author_id', e.target.value);
     };
-
-    const reserveBook = () => {
-        // miss ipv dit een state updaten met id boek pushen?
-        post(route('reservations.store', book.id));
-    }
 
     return (
         <div className="p-6 flex space-x-2">
@@ -103,8 +101,19 @@ export default function Book({ book, authors, authorname }) {
                         <div>
                             <span className="font-semibold">Genre:</span> {book.genre}
                         </div>
-                        <button className="bg-cyan-400 hover:bg-cyan-500 rounded-md p-2" onClick={(e) => setReservedBooks((prevState) => prevState + book.id)}>Reserve book</button>
-                        {/* <button className="bg-cyan-400 hover:bg-cyan-500 rounded-md p-2" onClick={(e) => reserveBook(e, book.id, authorname)}>Reserve book</button> */}
+                        {/* <Modal show={true}>
+                            {/* Hier proberen een modal te maken  */}
+                            {/* <div>
+                                <button onClick={close}>Klik hier</button>
+                            </div> */}
+                        {/* </Modal> */}
+                      
+                        <form name={"reserve-book" + book.id} onSubmit={submit}>
+                            {book.reserved == false
+                                ? <PrimaryButton className="bg-sky-400 hover:bg-sky-500" type='submit' onClick={e => setData('reserved', true)}>Reserve book</PrimaryButton>
+                                : <PrimaryButton className="bg-red-600 hover:bg-red-700" type='submit' onClick={e => setData('reserved', false)}>Manage reservation</PrimaryButton>
+                            }
+                        </form>
                     </div>
                 }
             </div>
