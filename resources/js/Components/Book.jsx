@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Dropdown from '@/Components/Dropdown';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
-import Modal from "./Modal";
 import { useForm, usePage } from '@inertiajs/react';
 
 export default function Book({ book, authors, authorname }) {
@@ -15,10 +14,11 @@ export default function Book({ book, authors, authorname }) {
         publication_date: book.publication_date,
         genre: book.genre,
         reserved: book.reserved,
-        //detach: xxx,
+        favourite: book.favourite,
     });
 
     const submit = (e) => {
+        console.log(data);
         e.preventDefault();
         patch(route('books.update', book.id), { onSuccess: () => setEditing(false) });
     };
@@ -27,8 +27,12 @@ export default function Book({ book, authors, authorname }) {
         setData('author_id', e.target.value);
     };
 
+    const makeFavourite = () => {
+        setData('favourite', book.favourite = !book.favourite);
+    }
 
-    console.log(favourite);
+    console.log(data.favourite);
+    // favourite zit alleen in de database zodat het wordt onthouden, dan kun je vanuit de database opvragen of een boek favourite is.
 
     return (
         <div className="p-6 flex space-x-2">
@@ -51,7 +55,6 @@ export default function Book({ book, authors, authorname }) {
                             </Dropdown.Link>
                         </Dropdown.Content>
                     </Dropdown>
-                    {/* {book.created_at !== book.updated_at && <small className="text-sm text-gray-600"> &middot; edited</small>} */}
                 </div>
                 {editing
                     ? <form onSubmit={submit}>
@@ -104,103 +107,62 @@ export default function Book({ book, authors, authorname }) {
                         <div>
                             <span className="font-semibold">Genre:</span> {book.genre}
                         </div>
-                        <form name={"reserve-book" + book.id} onSubmit={submit}>
+                        <form className="pt-3" name={"reserve-book" + book.id} onSubmit={submit}>
                             {book.reserved == false
                                 ? <PrimaryButton className="bg-sky-400 hover:bg-sky-500" type='submit' onClick={e => setData('reserved', true)}>Reserve book</PrimaryButton>
                                 : <PrimaryButton className="bg-red-600 hover:bg-red-700" type='submit' onClick={e => setData('reserved', false)}>Cancel reservation</PrimaryButton>
                             }
                         </form>
+                        <form className="pt-3" name={"favourite-book" + book.id} onSubmit={submit}>
+                            <div style={{ width: "100px", cursor: "pointer" }} type="submit" onClick={(e) => makeFavourite()}>
+                                <PrimaryButton className="contents">
+                                    {/* Made by madvic, see https://codepen.io/madvic */}
+                                    <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
+                                        <g id="Group" fill="none" fillRule="evenodd" transform="translate(467 392)">
+                                            <path id="heart" d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z"
+                                                fill={`${book.favourite ? "#E2264D" : "#AAB8C2"}`} />
+                                            <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5" />
 
-                        {favourite
-                            ? <div style={{ width: "100px", cursor: "pointer" }} onClick={(e) => setFavourite(!favourite)}>
-                                <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-                                    <g id="Group" fill="none" fillRule="evenodd" transform="translate(467 392)">
-                                        <path id="heart" d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" fill="#E2264D" />
-                                        <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5" />
+                                            <g id="grp7" opacity="0" transform="translate(7 6)">
+                                                <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2" />
+                                                <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2" />
+                                            </g>
 
-                                        <g id="grp7" opacity="0" transform="translate(7 6)">
-                                            <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2" />
-                                            <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2" />
+                                            <g id="grp6" opacity="0" transform="translate(0 28)">
+                                                <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2" />
+                                                <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2" />
+                                            </g>
+
+                                            <g id="grp3" opacity="0" transform="translate(52 28)">
+                                                <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2" />
+                                                <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2" />
+                                            </g>
+
+                                            <g id="grp2" opacity="0" transform="translate(44 6)">
+                                                <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2" />
+                                                <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2" />
+                                            </g>
+
+                                            <g id="grp5" opacity="0" transform="translate(14 50)">
+                                                <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2" />
+                                                <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2" />
+                                            </g>
+
+                                            <g id="grp4" opacity="0" transform="translate(35 50)">
+                                                <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2" />
+                                                <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2" />
+                                            </g>
+
+                                            <g id="grp1" opacity="0" transform="translate(24)">
+                                                <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2" />
+                                                <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2" />
+                                            </g>
                                         </g>
+                                    </svg>
+                                </PrimaryButton>
 
-                                        <g id="grp6" opacity="0" transform="translate(0 28)">
-                                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2" />
-                                            <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp3" opacity="0" transform="translate(52 28)">
-                                            <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2" />
-                                            <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp2" opacity="0" transform="translate(44 6)">
-                                            <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2" />
-                                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp5" opacity="0" transform="translate(14 50)">
-                                            <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2" />
-                                            <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp4" opacity="0" transform="translate(35 50)">
-                                            <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2" />
-                                            <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp1" opacity="0" transform="translate(24)">
-                                            <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2" />
-                                            <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2" />
-                                        </g>
-                                    </g>
-                                </svg>
                             </div>
-                            : <div style={{ width: "100px", cursor: "pointer" }} onClick={(e) => setFavourite(!favourite)}>
-                                <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-                                    <g id="Group" fill="none" fillRule="evenodd" transform="translate(467 392)">
-                                        <path id="heart" d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" fill="#AAB8C2" />
-                                        <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5" />
-
-                                        <g id="grp7" opacity="0" transform="translate(7 6)">
-                                            <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2" />
-                                            <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp6" opacity="0" transform="translate(0 28)">
-                                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2" />
-                                            <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp3" opacity="0" transform="translate(52 28)">
-                                            <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2" />
-                                            <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp2" opacity="0" transform="translate(44 6)">
-                                            <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2" />
-                                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp5" opacity="0" transform="translate(14 50)">
-                                            <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2" />
-                                            <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp4" opacity="0" transform="translate(35 50)">
-                                            <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2" />
-                                            <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2" />
-                                        </g>
-
-                                        <g id="grp1" opacity="0" transform="translate(24)">
-                                            <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2" />
-                                            <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2" />
-                                        </g>
-                                    </g>
-                                </svg>
-                            </div>
-                        }
-
-
+                        </form>
 
 
                     </div>

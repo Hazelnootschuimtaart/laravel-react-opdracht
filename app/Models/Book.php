@@ -17,6 +17,7 @@ class Book extends Model
         'publication_date',
         'genre',
         'reserved',
+        'favourite',
     ];
 
     public function author(): BelongsTo

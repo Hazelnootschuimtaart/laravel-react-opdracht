@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('publication_date');
             $table->string('genre');
             $table->boolean('reserved')->default(false);
+            $table->boolean('favourite')->default(false);
             $table->timestamps();
         });
     }

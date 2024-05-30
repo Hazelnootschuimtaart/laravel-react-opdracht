@@ -52,6 +52,7 @@ class BookController extends Controller
             'publication_date' => 'date',
             'genre' => 'string|max:45',
             'reserved' => 'required|boolean',
+            'favourite' => 'required|boolean',
         ]);
 
         // $validated->authors_id = 1;
@@ -89,6 +90,7 @@ class BookController extends Controller
             'publication_date' => 'date',
             'genre' => 'string|max:45',
             'reserved' => 'required|boolean',
+            'favourite' => 'required|boolean',
         ]);
 
         $book->update($validated);
@@ -99,9 +101,7 @@ class BookController extends Controller
             $book->reservations()->attach($user->id);
         }
 
-        // iets maken om de reserveringen weer te kunnen verwijderen, bijvoorbeeld dit, waarbij er een popup/modal moet komen waarbij je 'detach' moet intypen (of misschien
-        // op een andere manier "detach" invoeren). Hieronder checkt hij dan wat er is ingetypt en dan voert ie de code uit.
-        else {
+       else {
             $book->reservations()->detach($user->id);
         }
 
