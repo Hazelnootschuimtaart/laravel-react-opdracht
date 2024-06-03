@@ -14,6 +14,7 @@ export default function Index({ auth, authors }) {
 
     const submit = (e) => {
         e.preventDefault();
+        console.log(data, errors);
         post(route('authors.store'), { onSuccess: () => reset() });
     };
 

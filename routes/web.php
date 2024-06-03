@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,10 @@ Route::resource('books', BookController::class)
 ->middleware(['auth', 'verified']);
 
 Route::resource('reservations', ReservationController::class)
+->only(['index', 'store'])
+->middleware(['auth', 'verified']);
+
+Route::resource('follows', FollowController::class)
 ->only(['index', 'store'])
 ->middleware(['auth', 'verified']);
 

@@ -51,8 +51,8 @@ class BookController extends Controller
             'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
             'publication_date' => 'date',
             'genre' => 'string|max:45',
-            'reserved' => 'required|boolean',
-            'favourite' => 'required|boolean',
+            'reserved' => 'boolean',
+            'favourite' => 'boolean',
         ]);
 
         // $validated->authors_id = 1;

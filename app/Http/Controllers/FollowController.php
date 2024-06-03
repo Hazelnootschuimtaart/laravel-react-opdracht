@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Reservation;
-use App\Models\Book;
+use App\Models\Follow;
 use App\Models\Author;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ReservationController extends Controller
+class FollowController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        // return Book::with('reservations')->get();
-        return Inertia::render('Reservations/Index',[
-            'booksWithReservationOfCurrentUser' => Book::with('reservations')->get(),
+        return Inertia::render('Follows/Index', [
+            'followedAuthors' => Author::with('follows')->get(),
         ]);
     }
 
@@ -34,24 +32,21 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, string $id): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:45',
-            'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
-            'publication_date' => 'date',
-            'genre' => 'string|max:45',
+//
         ]);
 
-        Reservation::create($validated);
+        Follow::create($validated);
 
-        return redirect(route('reservations.index'));
+        return redirect(route('follows.index'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Reservation $reservation)
+    public function show(Follow $follow)
     {
         //
     }
@@ -59,7 +54,7 @@ class ReservationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Reservation $reservation)
+    public function edit(Follow $follow)
     {
         //
     }
@@ -67,7 +62,7 @@ class ReservationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Reservation $reservation)
+    public function update(Request $request, Follow $follow)
     {
         //
     }
@@ -75,7 +70,7 @@ class ReservationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reservation $reservation)
+    public function destroy(Follow $follow)
     {
         //
     }

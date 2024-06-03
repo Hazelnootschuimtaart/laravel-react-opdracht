@@ -45,7 +45,12 @@ class User extends Authenticatable
     ];
     
     public function reservations(): BelongsToMany
-    {
+    { // 'reservations' geeft hier aan dat de databasetabel die de relatie vastlegt een andere naam heeft dan gebruikelijk, namelijk 'reservations'
         return $this->belongsToMany(Book::class, 'reservations');
+    }
+
+    public function follows(): BelongsToMany
+    {
+        return $this->belongsToMany(Author::class, 'follows');
     }
 }

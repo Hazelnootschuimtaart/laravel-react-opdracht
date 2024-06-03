@@ -7,7 +7,6 @@ import { useForm, usePage } from '@inertiajs/react';
 export default function Book({ book, authors, authorname }) {
     const { auth } = usePage().props;
     const [editing, setEditing] = useState(false);
-    const [favourite, setFavourite] = useState(false);
     const { data, setData, patch, clearErrors, reset, errors } = useForm({
         title: book.title,
         author_id: book.author_id,

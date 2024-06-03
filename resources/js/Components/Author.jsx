@@ -11,11 +11,12 @@ export default function Author({ author }) {
         name: author.name,
         email: author.email,
         age: author.age,
+        followed: author.followed,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        // console.log(data, editing, errors);
+        console.log(data, editing, errors);
         patch(route('authors.update', author.id), { onSuccess: () => setEditing(false) });
     };
 
@@ -39,7 +40,6 @@ export default function Author({ author }) {
                         </Dropdown.Link>
                     </Dropdown.Content>
                 </Dropdown>
-                {author.created_at !== author.updated_at && <small className="text-sm text-gray-600"> &middot; edited</small>}
             </div>
             <div className="p-6 flex space-x-2">
                 <div>
@@ -78,7 +78,15 @@ export default function Author({ author }) {
                                 <button className="mt-4" onClick={() => { setEditing(false); reset(); clearErrors(); }}>Cancel</button>
                             </div>
                         </form>
-                        : <p className="mt-4 text-lg text-gray-900">{author.name}, {author.email}, {author.age} years old</p>
+                        : <div>
+                            <p className="mt-4 text-lg text-gray-900">{author.name}, {author.email}, {author.age} years old</p>
+                            <form className="pt-3" name={"follow-author" + author.id} onSubmit={submit}>
+                                {author.followed == false
+                                    ? <PrimaryButton className="bg-green-600 hover:bg-green-500 active:bg-green-600 focus:bg-green-600 focus:ring focus:ring-green-700" type='submit' onClick={e => setData('followed', true)}>Follow author</PrimaryButton>
+                                    : <PrimaryButton className="bg-rose-600 hover:bg-rose-700 active: bg-rose-600 focus:bg-rose-700 focus:ring focus:ring-rose-700" type='submit' onClick={e => setData('followed', false)}>Stop following author</PrimaryButton>
+                                }
+                            </form>
+                        </div>
                     }
                 </div>
             </div>

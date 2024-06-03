@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
+// lukt niet om auteur in database te krijgen. Waarschijnlijk ook niet voor books.
+
+
 class AuthorController extends Controller
 {
     /**
@@ -38,6 +41,7 @@ class AuthorController extends Controller
             'name' => 'required|string|max:45',
             'email' => 'string|email|max:45|unique:authors,email',
             'age' => 'integer|min:0|max:125',
+            'followed' => 'boolean',
         ]);
         Author::create($validated);
 
@@ -69,9 +73,20 @@ class AuthorController extends Controller
             'name' => 'required|string|max:45',
             'email' => ['string', 'email', 'max:45', Rule::unique('authors')->ignore($author->id)],
             'age' => 'integer|min:0|max:125',
+            'followed' => 'required|boolean',
         ]);
 
         $author->update($validated);
+
+        $user = auth()->user();
+
+        if ($request->followed == true) {
+            $author->follows()->attach($user->id);
+        }
+
+       else {
+            $author->follows()->detach($user->id);
+        }
 
         return redirect(route('authors.index'));
     }

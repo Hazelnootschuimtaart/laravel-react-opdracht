@@ -72,36 +72,6 @@ export default function Index({ auth, books, authors, authornames }) {
                         )}
                     </div>
                 </div>
-
-                {/* De reserveringen op een nieuw tabblad 
-              Je klikt in de browser op 'reserveer'.
-              Onclick geactiveerd, dan moet ie dat boek naar reserveringen sturen. Hoe kan hij het boek toevoegen aan het Reserveringen tabblad?
-              reserved-books-array?
-
-
-              reserve --> boolean met isReserved op true zetten voor dat boek.
-              Dan in index van reservations een ternary zetten met daarin isReserved ? show book : don't show book
-
-<a href="{{ route('post.show', $post->id) }}" class="btn btn-primary">Read More</a>
-maar dan ipv post.show doe je reservations.index en ipv $post->id doe je $book->id oid...?
-
-Kun je de store route van reservations aanspreken via books?
-Via de reservations-versie van:
-    const submit = (e) => {
-        e.preventDefault();
-        post(route('books.store'), { onSuccess: () => reset() });
-  };
-        - knop aanmaken in Book
-        - als klik op knop, dan 
-        de reservations-versie van:
-    const submit = (e) => {
-        e.preventDefault();
-        post(route('books.store'), { onSuccess: () => reset() });
-
-  Ben nu bezig met alles goed zetten voor het kunnen 'storen' van het gereserveerde boek, mócht het werken. Zodat ik het kan testen.
-
-             */}
-
             </div>
         </AuthenticatedLayout>
     )
