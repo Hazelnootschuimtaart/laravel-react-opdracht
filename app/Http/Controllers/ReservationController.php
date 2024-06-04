@@ -18,8 +18,8 @@ class ReservationController extends Controller
     public function index(): Response
     {
         // return Book::with('reservations')->get();
-        return Inertia::render('Reservations/Index',[
-            'booksWithReservationOfCurrentUser' => Book::with('reservations')->get(),
+        return Inertia::render('Books/Reservations',[
+            'reservations' => auth()->user()->reservations()->get(),
         ]);
     }
 
@@ -34,17 +34,10 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, string $id): RedirectResponse
+    public function store(Request $request, Book $book): RedirectResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:45',
-            'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
-            'publication_date' => 'date',
-            'genre' => 'string|max:45',
-        ]);
-
-        Reservation::create($validated);
-
+        auth()->user()->reservations()->attach($book->id);
+        
         return redirect(route('reservations.index'));
     }
 
@@ -75,8 +68,10 @@ class ReservationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reservation $reservation)
+    public function destroy(Reservation $reservation, Book $book)
     {
-        //
+        auth()->user()->reservations()->detach($book);
+        
+        return redirect(route('reservations.index')); 
     }
 }

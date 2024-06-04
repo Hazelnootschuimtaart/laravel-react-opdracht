@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dropdown from '@/Components/Dropdown';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -7,31 +7,36 @@ import { useForm, usePage } from '@inertiajs/react';
 export default function Book({ book, authors, authorname }) {
     const { auth } = usePage().props;
     const [editing, setEditing] = useState(false);
-    const { data, setData, patch, clearErrors, reset, errors } = useForm({
+    const [reserved, setReserved] = useState("");
+    const { data, setData, patch, post, clearErrors, reset, errors } = useForm({
         title: book.title,
         author_id: book.author_id,
         publication_date: book.publication_date,
         genre: book.genre,
-        reserved: book.reserved,
-        favourite: book.favourite,
     });
+    // const {  } = useForm({ 
+    //     bookId: book.id, });
 
     const submit = (e) => {
-        console.log(data);
         e.preventDefault();
         patch(route('books.update', book.id), { onSuccess: () => setEditing(false) });
     };
 
+    const submitReservation = (e) => {
+        e.preventDefault();
+        console.log(errors, book.id);
+        post(route('reservations.store', book.id));
+    }
+
+    const cancelReservation = (e) => {
+        e.preventDefault();
+        delete (route('reservations.destroy', book.id));
+    }
+
+    // change the author in the select element
     const selectChange = (e) => {
         setData('author_id', e.target.value);
     };
-
-    const makeFavourite = () => {
-        setData('favourite', book.favourite = !book.favourite);
-    }
-
-    console.log(data.favourite);
-    // favourite zit alleen in de database zodat het wordt onthouden, dan kun je vanuit de database opvragen of een boek favourite is.
 
     return (
         <div className="p-6 flex space-x-2">
@@ -106,12 +111,16 @@ export default function Book({ book, authors, authorname }) {
                         <div>
                             <span className="font-semibold">Genre:</span> {book.genre}
                         </div>
-                        <form className="pt-3" name={"reserve-book" + book.id} onSubmit={submit}>
-                            {book.reserved == false
-                                ? <PrimaryButton className="bg-sky-400 hover:bg-sky-500" type='submit' onClick={e => setData('reserved', true)}>Reserve book</PrimaryButton>
-                                : <PrimaryButton className="bg-red-600 hover:bg-red-700" type='submit' onClick={e => setData('reserved', false)}>Cancel reservation</PrimaryButton>
-                            }
+                        {/* RESERVATIONS */}
+                        <form className="pt-3" name={"reserve-book" + book.id}>
+                            {/* {reserved == false || reserved == ""
+                                ? <PrimaryButton className="bg-sky-400 hover:bg-sky-500" type='submit' href={route('reservations.store', book.id)} method="post">Reserve book</PrimaryButton>
+                                : <PrimaryButton className="bg-red-600 hover:bg-red-700" type='submit' href={route('reservations.destroy', book.id)} method="delete">Cancel reservation</PrimaryButton>
+                            } */}
+                            <PrimaryButton className="bg-sky-400 hover:bg-sky-500" type='submit' onClick={submitReservation}>Reserve book</PrimaryButton>
+
                         </form>
+                        {/* FAVOURITES */}
                         <form className="pt-3" name={"favourite-book" + book.id} onSubmit={submit}>
                             <div style={{ width: "100px", cursor: "pointer" }} type="submit" onClick={(e) => makeFavourite()}>
                                 <PrimaryButton className="contents">

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name', 45);
             $table->string('email', 45)->nullable()->unique();
             $table->integer('age');
-            $table->boolean('followed')->default(false);
             $table->timestamps();
         });
     }

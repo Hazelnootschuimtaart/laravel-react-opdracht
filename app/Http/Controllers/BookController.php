@@ -27,7 +27,6 @@ class BookController extends Controller
 
         return Inertia::render('Books/Index', [
             'books' => Book::all(),
-            // 'books' => Book::with('author:name')->get(),
             'authors' => Author::all(),
             'authornames' => $authorlist,
         ]);
@@ -89,15 +88,30 @@ class BookController extends Controller
             'author_id' => 'required|integer|max:9223372036854775807|exists:authors,id',
             'publication_date' => 'date',
             'genre' => 'string|max:45',
-            'reserved' => 'required|boolean',
-            'favourite' => 'required|boolean',
         ]);
 
         $book->update($validated);
 
         $user = auth()->user();
 
-        if ($request->reserved == true) {
+        //Favourites
+        
+        // loopen door array van reeds gereserveerde boeken en als het er nog niet in staat, dan in de if?
+        // als reservations leeg is, dan in if.
+
+        if ($request->favourite == true) {
+            $book->favourites()->attach($user->id);
+        }
+
+        else {
+            $book->favourites()->detach($user->id);
+        }
+
+        //Reservations
+// $reservations = 
+
+
+        if ($request->reservations == true) {
             $book->reservations()->attach($user->id);
         }
 
@@ -108,7 +122,29 @@ class BookController extends Controller
         return redirect(route('books.index'));
     }
 
-    // BACKUP UPDATE() MET SYNC
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Book $book): RedirectResponse
+    {
+        $book->delete();
+
+        return redirect(route('books.index'));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// BACKUP UPDATE() MET SYNC
     // public function update(Request $request, Book $book): RedirectResponse
     // {
     //     $validated = $request->validate([
@@ -131,15 +167,3 @@ class BookController extends Controller
 
     //     return redirect(route('books.index'));
     // }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Book $book): RedirectResponse
-    {
-        $book->delete();
-
-        return redirect(route('books.index'));
-    }
-}

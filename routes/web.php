@@ -48,11 +48,11 @@ Route::resource('books', BookController::class)
 ->middleware(['auth', 'verified']);
 
 Route::resource('reservations', ReservationController::class)
-->only(['index', 'store'])
+->only(['index', 'store', 'update', 'destroy'])
 ->middleware(['auth', 'verified']);
 
 Route::resource('follows', FollowController::class)
-->only(['index', 'store'])
+->only(['index', 'store', 'update', 'destroy'])
 ->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

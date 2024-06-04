@@ -16,8 +16,6 @@ class Book extends Model
         'author_id',
         'publication_date',
         'genre',
-        'reserved',
-        'favourite',
     ];
 
     public function author(): BelongsTo
@@ -32,4 +30,16 @@ class Book extends Model
             ->wherePivot('user_id', auth()->user()->id)
             ;
     }
+
+    public function favourites()
+    {
+        return $this->belongsToMany(User::class, 'favourites')
+        ->wherePivot('user_id', auth()->user()->id);
+    }
 }
+
+        //https://laravel.com/docs/11.x/seeding
+
+
+
+        
