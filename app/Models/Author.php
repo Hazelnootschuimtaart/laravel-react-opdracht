@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\HasMany;
+use App\Models\Author;
+use App\Models\Book;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Author extends Model
@@ -15,7 +17,7 @@ class Author extends Model
         'name',
         'email',
         'age',
-        'followed',
+        // 'followed',
     ];
 
     public function books(): HasMany

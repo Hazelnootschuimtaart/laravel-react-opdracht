@@ -38,8 +38,4 @@ class Book extends Model
     }
 }
 
-        //https://laravel.com/docs/11.x/seeding
-
-
-
         
