@@ -15,6 +15,8 @@ export default function Reservations({ auth, reservations }) {
         post(route('chirps.store'), { onSuccess: () => reset() });
     };
 
+    console.log('reservations ', reservations);
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Reservations" />
@@ -23,10 +25,9 @@ export default function Reservations({ auth, reservations }) {
                 <h2 className='text-xl'>Reserved books</h2>
                 <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
                     {reservations.map((reservedBook, index) => {
-                        const reservationsOfBook = reservedBook.reservations;
-                        if (reservationsOfBook.length != 0) {
-                            return <ReservedBook key={index} book={reservedBook} />
-                        }
+
+                        return <ReservedBook key={index} book={reservedBook} />
+
                     }
                     )}
                 </div>

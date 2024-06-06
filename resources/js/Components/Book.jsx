@@ -14,8 +14,6 @@ export default function Book({ book, authors, authorname }) {
         publication_date: book.publication_date,
         genre: book.genre,
     });
-    // const {  } = useForm({ 
-    //     bookId: book.id, });
 
     const submit = (e) => {
         e.preventDefault();
@@ -24,8 +22,8 @@ export default function Book({ book, authors, authorname }) {
 
     const submitReservation = (e) => {
         e.preventDefault();
-        console.log(errors, book.id);
-        post(route('reservations.store', book.id));
+        console.log("errors ", errors);
+        post(route('reservations.store', book));
     }
 
     const cancelReservation = (e) => {
@@ -118,7 +116,7 @@ export default function Book({ book, authors, authorname }) {
                                 : <PrimaryButton className="bg-red-600 hover:bg-red-700" type='submit' href={route('reservations.destroy', book.id)} method="delete">Cancel reservation</PrimaryButton>
                             } */}
                             <PrimaryButton className="bg-sky-400 hover:bg-sky-500" type='submit' onClick={submitReservation}>Reserve book</PrimaryButton>
-
+                            <PrimaryButton className="bg-red-600 hover:bg-red-700" type='submit' onClick={cancelReservation}>Cancel reservation</PrimaryButton>
                         </form>
                         {/* FAVOURITES */}
                         <form className="pt-3" name={"favourite-book" + book.id} onSubmit={submit}>

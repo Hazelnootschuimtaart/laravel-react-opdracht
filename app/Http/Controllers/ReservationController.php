@@ -9,6 +9,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\Rule;
+use Illuminate\Database\Query\Builder;
 
 class ReservationController extends Controller
 {
@@ -35,10 +37,21 @@ class ReservationController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Book $book): RedirectResponse
+    // public function store(Request $request, Book $book)
     {
-        auth()->user()->reservations()->attach($book->id);
+        $request['user_id'] = auth()->user()->id;
+        $request['book_id'] = $request->id;
+        $validated = $request->validate([
+            'user_id' => ['required', 'integer', 'min:1', 'max:18446744073709551615',],
+            'book_id' => ['required', 'integer', 'min:1', 'max:18446744073709551615', 'exists:books,id',
+                        Rule::unique('reservations')->where(fn (Builder $query) =>
+                        $query->where('user_id', auth()->user()->id))],
+      ]);
+
+        auth()->user()->reservations()->attach($request->id);
         
         return redirect(route('reservations.index'));
+        // return $validated;
     }
 
     /**
