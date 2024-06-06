@@ -28,7 +28,9 @@ export default function Book({ book, authors, authorname }) {
 
     const cancelReservation = (e) => {
         e.preventDefault();
-        delete (route('reservations.destroy', book.id));
+        post(route('reservations.destroy', book.id), {
+            _method: 'delete',
+        });
     }
 
     // change the author in the select element
@@ -116,7 +118,7 @@ export default function Book({ book, authors, authorname }) {
                                 : <PrimaryButton className="bg-red-600 hover:bg-red-700" type='submit' href={route('reservations.destroy', book.id)} method="delete">Cancel reservation</PrimaryButton>
                             } */}
                             <PrimaryButton className="bg-sky-400 hover:bg-sky-500" type='submit' onClick={submitReservation}>Reserve book</PrimaryButton>
-                            <PrimaryButton className="bg-red-600 hover:bg-red-700" type='submit' onClick={cancelReservation}>Cancel reservation</PrimaryButton>
+                            <PrimaryButton className="bg-red-600 hover:bg-red-700" onClick={cancelReservation} method="delete">Cancel reservation</PrimaryButton>
                         </form>
                         {/* FAVOURITES */}
                         <form className="pt-3" name={"favourite-book" + book.id} onSubmit={submit}>

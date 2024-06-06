@@ -85,6 +85,6 @@ class ReservationController extends Controller
     {
         auth()->user()->reservations()->detach($book);
         
-        return redirect(route('reservations.index')); 
+        return redirect(route('books.index')); 
     }
 }
