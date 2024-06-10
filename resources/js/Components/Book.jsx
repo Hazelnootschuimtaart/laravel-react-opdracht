@@ -4,11 +4,10 @@ import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm, usePage } from '@inertiajs/react';
 
-export default function Book({ book, authors, authorname }) {
+export default function Book({ book, authors, authorname, reservations, allReservations }) {
     const { auth } = usePage().props;
     const [editing, setEditing] = useState(false);
-    const [reserved, setReserved] = useState("");
-    const { data, setData, patch, post, clearErrors, reset, errors } = useForm({
+    const { data, setData, patch, post, delete: destroy, clearErrors, reset, errors } = useForm({
         title: book.title,
         author_id: book.author_id,
         publication_date: book.publication_date,
@@ -22,14 +21,32 @@ export default function Book({ book, authors, authorname }) {
 
     const submitReservation = (e) => {
         e.preventDefault();
-        console.log("errors ", errors);
         post(route('reservations.store', book));
+
     }
 
     const cancelReservation = (e) => {
+        let deleteThisReservation;
+        for (let i = 0; i < reservations.length; i++) {
+            const reservationBookId = reservations[i].pivot.book_id;
+
+            allReservations.map((reservation, index) => {
+                const allReservationBookId = reservation.book_id;
+                if (book.id == allReservationBookId && book.id == reservationBookId) {
+                    deleteThisReservation = reservation;
+                }
+            });
+        }
+
         e.preventDefault();
-        post(route('reservations.destroy', book.id), {
-            _method: 'delete',
+        destroy(route('reservations.destroy', deleteThisReservation), {
+            preserveScroll: true,
+            onSuccess: () => {
+                console.log("Reservation cancelled successfully");
+            },
+            onError: (errors) => {
+                console.error("cancelling failed: ", errors);
+            }
         });
     }
 

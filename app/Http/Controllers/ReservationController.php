@@ -81,9 +81,9 @@ class ReservationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reservation $reservation, Book $book)
+    public function destroy(Reservation $reservation): RedirectResponse
     {
-        auth()->user()->reservations()->detach($book);
+        $reservation->delete();
         
         return redirect(route('books.index')); 
     }

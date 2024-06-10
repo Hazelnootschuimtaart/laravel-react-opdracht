@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Author;
 use App\Models\User;
+use App\Models\Reservation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,6 +18,7 @@ class BookController extends Controller
      */
     public function index(): Response
     {
+        $reservations = Reservation::all();
         $books = Book::all();
         $authorlist=array();
  
@@ -29,6 +31,12 @@ class BookController extends Controller
             'books' => Book::all(),
             'authors' => Author::all(),
             'authornames' => $authorlist,
+            'reservations' => auth()->user()->reservations()->get(), // in Book.jsx de reserveringen opvragen.
+            'allReservations' => $reservations,
+
+            // door naar de bookid te kijken op de reservations --> ik dacht dat je om een reservering te verwijderne het reservation id nodig had, kun je dit dan opvragen
+            // met het bookid? Hoe kun je vanuit het boek de reservering pakken? Misschien loopen door reserveringen en dan als bookid(reserveringen) == bookid(boek) dan 
+            // verwijderen
         ]);
     }
 
