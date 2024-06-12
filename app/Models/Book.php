@@ -27,8 +27,8 @@ class Book extends Model
     {
         return $this->belongsToMany(User::class,'reservations')
             ->withPivot(['id'])
-            ->wherePivot('user_id', auth()->user()->id)
-            ;
+            ->wherePivot('user_id', 3); //auth()->user()->id
+            
     }
 
     public function favourites()
