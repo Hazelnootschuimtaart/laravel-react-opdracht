@@ -36,7 +36,7 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Book $book): RedirectResponse
+    public function store(Request $request): RedirectResponse
     // public function store(Request $request, Book $book)
     {
         $request['user_id'] = auth()->user()->id;

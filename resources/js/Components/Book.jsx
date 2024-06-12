@@ -3,16 +3,28 @@ import Dropdown from '@/Components/Dropdown';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm, usePage } from '@inertiajs/react';
+import FavouriteBook from "./FavouriteBook";
 
-export default function Book({ book, authors, authorname, reservations, allReservations }) {
+export default function Book({ book, books, authors, authorname, reservations, allReservations, favourites, allFavourites }) {
     const { auth } = usePage().props;
     const [editing, setEditing] = useState(false);
+    let bookIsFavourite;
     const { data, setData, patch, post, delete: destroy, clearErrors, reset, errors } = useForm({
         title: book.title,
         author_id: book.author_id,
         publication_date: book.publication_date,
         genre: book.genre,
     });
+    const bookForm = useForm({
+        title: book.title,
+        author_id: book.author_id,
+        publication_date: book.publication_date,
+        genre: book.genre,
+    });
+    const favouriteForm = useForm({
+        book_id: book.id,
+    });
+    // const reservationForm = blah;
 
     const submit = (e) => {
         e.preventDefault();
@@ -22,16 +34,19 @@ export default function Book({ book, authors, authorname, reservations, allReser
     const submitReservation = (e) => {
         e.preventDefault();
         post(route('reservations.store', book));
-
+        reservationForm.delete(route('reservations.destroy', theReservation.id));
     }
 
     const cancelReservation = (e) => {
         let deleteThisReservation;
+        // loop through the reservations of the current user. These reservation data are without reservation-id.
         for (let i = 0; i < reservations.length; i++) {
             const reservationBookId = reservations[i].pivot.book_id;
-
+            // map through all the reservations that exist (for all users), in order to retrieve all the information of the whole reservation. 
+            // That can be passed to the destroy route in order to delete the reservation.
             allReservations.map((reservation, index) => {
                 const allReservationBookId = reservation.book_id;
+                // if book-id of the (incomplete) reservation == the current book.id AND the book-id of the complete reservation == the current book.id
                 if (book.id == allReservationBookId && book.id == reservationBookId) {
                     deleteThisReservation = reservation;
                 }
@@ -48,6 +63,17 @@ export default function Book({ book, authors, authorname, reservations, allReser
                 console.error("cancelling failed: ", errors);
             }
         });
+    }
+
+    const submitFavourite = (e) => {
+        e.preventDefault();
+        favouriteForm.post(route('favourites.store'));
+    }
+
+    const cancelFavourite = (e) => {
+        const deleteThisFavourite = book.favourites[0].pivot.id;
+        e.preventDefault();
+        destroy(route('favourites.destroy', deleteThisFavourite));
     }
 
     // change the author in the select element
@@ -130,66 +156,60 @@ export default function Book({ book, authors, authorname, reservations, allReser
                         </div>
                         {/* RESERVATIONS */}
                         <form className="pt-3" name={"reserve-book" + book.id}>
-                            {/* {reserved == false || reserved == ""
-                                ? <PrimaryButton className="bg-sky-400 hover:bg-sky-500" type='submit' href={route('reservations.store', book.id)} method="post">Reserve book</PrimaryButton>
-                                : <PrimaryButton className="bg-red-600 hover:bg-red-700" type='submit' href={route('reservations.destroy', book.id)} method="delete">Cancel reservation</PrimaryButton>
-                            } */}
                             <PrimaryButton className="bg-sky-400 hover:bg-sky-500" type='submit' onClick={submitReservation}>Reserve book</PrimaryButton>
                             <PrimaryButton className="bg-red-600 hover:bg-red-700" onClick={cancelReservation} method="delete">Cancel reservation</PrimaryButton>
                         </form>
                         {/* FAVOURITES */}
-                        <form className="pt-3" name={"favourite-book" + book.id} onSubmit={submit}>
-                            <div style={{ width: "100px", cursor: "pointer" }} type="submit" onClick={(e) => makeFavourite()}>
-                                <PrimaryButton className="contents">
-                                    {/* Made by madvic, see https://codepen.io/madvic */}
-                                    <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-                                        <g id="Group" fill="none" fillRule="evenodd" transform="translate(467 392)">
-                                            <path id="heart" d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z"
-                                                fill={`${book.favourite ? "#E2264D" : "#AAB8C2"}`} />
-                                            <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5" />
+                        <form className="pt-3" name={"favourite-book" + book.id} onSubmit={submitFavourite}>
+                            <PrimaryButton type="submit" className="contents">
+                                <svg style={{ width: "100px", cursor: "pointer" }} id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="Group" fill="none" fillRule="evenodd" transform="translate(467 392)">
+                                        <path id="heart" d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z"
+                                            fill={`${bookIsFavourite ? "#E2264D" : "#AAB8C2"}`} />
+                                        <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5" />
 
-                                            <g id="grp7" opacity="0" transform="translate(7 6)">
-                                                <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2" />
-                                                <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2" />
-                                            </g>
-
-                                            <g id="grp6" opacity="0" transform="translate(0 28)">
-                                                <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2" />
-                                                <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2" />
-                                            </g>
-
-                                            <g id="grp3" opacity="0" transform="translate(52 28)">
-                                                <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2" />
-                                                <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2" />
-                                            </g>
-
-                                            <g id="grp2" opacity="0" transform="translate(44 6)">
-                                                <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2" />
-                                                <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2" />
-                                            </g>
-
-                                            <g id="grp5" opacity="0" transform="translate(14 50)">
-                                                <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2" />
-                                                <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2" />
-                                            </g>
-
-                                            <g id="grp4" opacity="0" transform="translate(35 50)">
-                                                <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2" />
-                                                <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2" />
-                                            </g>
-
-                                            <g id="grp1" opacity="0" transform="translate(24)">
-                                                <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2" />
-                                                <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2" />
-                                            </g>
+                                        <g id="grp7" opacity="0" transform="translate(7 6)">
+                                            <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2" />
+                                            <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2" />
                                         </g>
-                                    </svg>
-                                </PrimaryButton>
 
-                            </div>
+                                        <g id="grp6" opacity="0" transform="translate(0 28)">
+                                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2" />
+                                            <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2" />
+                                        </g>
+
+                                        <g id="grp3" opacity="0" transform="translate(52 28)">
+                                            <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2" />
+                                            <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2" />
+                                        </g>
+
+                                        <g id="grp2" opacity="0" transform="translate(44 6)">
+                                            <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2" />
+                                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2" />
+                                        </g>
+
+                                        <g id="grp5" opacity="0" transform="translate(14 50)">
+                                            <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2" />
+                                            <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2" />
+                                        </g>
+
+                                        <g id="grp4" opacity="0" transform="translate(35 50)">
+                                            <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2" />
+                                            <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2" />
+                                        </g>
+
+                                        <g id="grp1" opacity="0" transform="translate(24)">
+                                            <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2" />
+                                            <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </PrimaryButton>
+                            <PrimaryButton onClick={cancelFavourite} method="delete">Cancel favourite</PrimaryButton>
                         </form>
-
-
+                        {/* <form onSubmit={submitFavourite}>
+                            <PrimaryButton type='submit'>Favourite</PrimaryButton>
+                        </form>  */}
                     </div>
                 }
             </div>

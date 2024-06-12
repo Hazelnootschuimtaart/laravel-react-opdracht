@@ -5,7 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm, Head } from '@inertiajs/react';
 import Book from "@/Components/Book";
 
-export default function Index({ auth, books, authors, authornames, reservations, allReservations }) {
+export default function Index({ auth, books, authors, authornames, reservations, allReservations, favourites, allFavourites }) {
     const { data, setData, post, processing, reset, errors } = useForm({
         title: '',
         author_id: 1,
@@ -68,7 +68,17 @@ export default function Index({ auth, books, authors, authornames, reservations,
 
                     <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
                         {books.map((book, index) =>
-                            <Book key={book.id} book={book} authors={authors} authorname={authornames[index]} reservations={reservations} allReservations={allReservations} />
+                            <Book
+                                key={book.id}
+                                book={book}
+                                books={books}
+                                authors={authors}
+                                authorname={authornames[index]}
+                                reservations={reservations}
+                                allReservations={allReservations}
+                                favourites={favourites}
+                                allFavourites={allFavourites}
+                            />
                         )}
                     </div>
                 </div>

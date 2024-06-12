@@ -9,8 +9,8 @@ export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="bg-white border-b border-gray-100">
+        <div className="min-h-screen bg-rose-50">
+            <nav className="bg-pink-200 border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex">
@@ -20,7 +20,7 @@ export default function Authenticated({ user, header, children }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-pink-800">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
@@ -32,6 +32,9 @@ export default function Authenticated({ user, header, children }) {
                                 </NavLink>
                                 <NavLink href={route('reservations.index')} active={route().current('reservations.index')}>
                                     Reservations
+                                </NavLink>
+                                <NavLink href={route('favourites.index')} active={route().current('favourites.index')}>
+                                    Favourites
                                 </NavLink>
                                 <NavLink href={route('follows.index')} active={route().current('follows.index')}>
                                     Followed authors
@@ -116,6 +119,9 @@ export default function Authenticated({ user, header, children }) {
                         <ResponsiveNavLink href={route('reservations.index')} active={route().current('reservations.index')}>
                             Reservations
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('favourites.index')} active={route().current('favourites.index')}>
+                            Favourites
+                        </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('follows.index')} active={route().current('follows.index')}>
                             Followed authors
                         </ResponsiveNavLink>
@@ -138,7 +144,7 @@ export default function Authenticated({ user, header, children }) {
             </nav>
 
             {header && (
-                <header className="bg-white shadow">
+                <header>
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}

@@ -15,8 +15,6 @@ export default function Reservations({ auth, reservations }) {
         post(route('chirps.store'), { onSuccess: () => reset() });
     };
 
-    console.log('reservations ', reservations); // bevat geen id
-
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Reservations" />

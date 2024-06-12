@@ -26,7 +26,7 @@ class Book extends Model
     public function reservations()
     {
         return $this->belongsToMany(User::class,'reservations')
-            // ->withPivot('reservations')
+            ->withPivot(['id'])
             ->wherePivot('user_id', auth()->user()->id)
             ;
     }
@@ -34,8 +34,11 @@ class Book extends Model
     public function favourites()
     {
         return $this->belongsToMany(User::class, 'favourites')
+        // ->wherePivot('user_id', 3)
+        ->withPivot(['id'])
         ->wherePivot('user_id', auth()->user()->id);
-    }
+    } 
 }
 
-        
+        // pivot id is nu toegankelijk! 
+        // je kunt nu in de terminal route list zien wat de route vraagt. met haakjes is model zelf waar iets mee moet gebeuren, zonder is via useform
