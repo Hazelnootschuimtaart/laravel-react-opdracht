@@ -23,8 +23,7 @@ class BookController extends Controller
         $favourites = Favourite::all();
         $books = Book::all();
         $authorlist=array();
-        // $onlyFavourites = Book::with('favourites')->filter()
- 
+       
         foreach ($books as $book) {
             $thisauthor = $book->author->name;
             array_push($authorlist, $thisauthor);
