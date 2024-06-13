@@ -7,18 +7,32 @@ import { useForm, usePage } from '@inertiajs/react';
 export default function Author({ author }) {
     const { auth } = usePage().props;
     const [editing, setEditing] = useState(false);
-    const { data, setData, patch, clearErrors, reset, errors } = useForm({
+    const { data, setData, patch, post, delete: destroy, clearErrors, reset, errors } = useForm({
         name: author.name,
         email: author.email,
         age: author.age,
-        followed: author.followed,
     });
 
+    //SAVE CHANGES/EDITS
     const submit = (e) => {
         e.preventDefault();
-        console.log(data, editing, errors);
         patch(route('authors.update', author.id), { onSuccess: () => setEditing(false) });
     };
+
+    const followForm = useForm({
+        author_id: author.id,
+    });
+
+    // FOLLOWS
+    const submitFollow = (e) => {
+        e.preventDefault();
+        followForm.post(route('follows.store'));
+    }
+    const cancelFollow = (e) => {
+        const deleteThisFollow = author.follows[0].pivot.id;
+        e.preventDefault();
+        destroy(route('follows.destroy', deleteThisFollow));
+    }
 
     return (
         <>
@@ -80,11 +94,9 @@ export default function Author({ author }) {
                         </form>
                         : <div>
                             <p className="mt-4 text-lg text-gray-900">{author.name}, {author.email}, {author.age} years old</p>
-                            <form className="pt-3" name={"follow-author" + author.id} onSubmit={submit}>
-                                {author.followed == false
-                                    ? <PrimaryButton className="bg-green-600 hover:bg-green-500 active:bg-green-600 focus:bg-green-600 focus:ring focus:ring-green-700" type='submit' onClick={e => setData('followed', true)}>Follow author</PrimaryButton>
-                                    : <PrimaryButton className="bg-rose-600 hover:bg-rose-700 active: bg-rose-600 focus:bg-rose-700 focus:ring focus:ring-rose-700" type='submit' onClick={e => setData('followed', false)}>Stop following author</PrimaryButton>
-                                }
+                            <form className="pt-3" name={"follow-author" + author.id} onSubmit={submitFollow}>
+                                <PrimaryButton className="bg-green-600 hover:bg-green-500 active:bg-green-600 focus:bg-green-600 focus:ring focus:ring-green-700" type='submit'>Follow author</PrimaryButton>
+                                <PrimaryButton className="bg-rose-600 hover:bg-rose-700 active: bg-rose-600 focus:bg-rose-700 focus:ring focus:ring-rose-700" onClick={(e) => { cancelFollow(e) }} method="delete">Stop following author</PrimaryButton>
                             </form>
                         </div>
                     }

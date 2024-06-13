@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from '@/Components/Dropdown';
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm, usePage } from '@inertiajs/react';
-import FavouriteBook from "./FavouriteBook";
 import FavouriteButtons from "./FavouriteButtons";
 import ReservationButtons from "./ReservationButtons";
 import ShowBook from "./ShowBook";
@@ -18,12 +15,6 @@ export default function Book({ book, authors, authorname }) {
         publication_date: book.publication_date,
         genre: book.genre,
     });
-    const bookForm = useForm({
-        title: book.title,
-        author_id: book.author_id,
-        publication_date: book.publication_date,
-        genre: book.genre,
-    });
     const favouriteForm = useForm({
         book_id: book.id,
     });
@@ -31,6 +22,7 @@ export default function Book({ book, authors, authorname }) {
         book_id: book.id,
     });
 
+    // Passes onChange data to this component, so it can be set in the form and sent to the database.
     const changeData = (type, newValue) => {
         console.log("type ", type, "& newValue ", newValue);
         setData(type, newValue);
@@ -38,8 +30,6 @@ export default function Book({ book, authors, authorname }) {
 
     //SAVE CHANGES/EDITS
     const submit = (e) => {
-        console.log(data);
-
         e.preventDefault();
         patch(route('books.update', book.id), { onSuccess: () => setEditing(false) });
     };

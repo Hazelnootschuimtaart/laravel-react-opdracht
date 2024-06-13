@@ -20,7 +20,6 @@ class BookController extends Controller
     public function index(): Response
     {
         $reservations = Reservation::all();
-        $favourites = Favourite::all();
         $books = Book::all();
         $authorlist=array();
        
@@ -33,10 +32,7 @@ class BookController extends Controller
             'books' => Book::with('favourites', 'reservations')->get(),
             'authors' => Author::all(),
             'authornames' => $authorlist,
-            'reservations' => auth()->user()->reservations()->get(), // in Book.jsx de reserveringen opvragen.
-            'allReservations' => $reservations,
-            'favourites' => auth()->user()->favourites()->get(),
-            ]);
+        ]);
     }
 
     /**
@@ -59,10 +55,7 @@ class BookController extends Controller
             'genre' => 'string|max:45',
         ]);
 
-        // $validated->authors_id = 1;
-
         Book::create($validated);
-        // $request->author()-books()->create($validated);
 
         return redirect(route('books.index'));
     }

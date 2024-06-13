@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Author;
+use App\Models\Follow;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,7 +22,7 @@ class AuthorController extends Controller
     public function index(): Response
     {
         return Inertia::render('Authors/Index', [
-            'authors' => Author::all(),
+            'authors' => Author::with('follows')->get(),
         ]);
     }
 
@@ -79,14 +81,6 @@ class AuthorController extends Controller
         $author->update($validated);
 
         $user = auth()->user();
-
-        if ($request->followed == true) {
-            $author->follows()->attach($user->id);
-        }
-
-       else {
-            $author->follows()->detach($user->id);
-        }
 
         return redirect(route('authors.index'));
     }

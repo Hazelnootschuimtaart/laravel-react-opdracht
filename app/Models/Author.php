@@ -17,7 +17,6 @@ class Author extends Model
         'name',
         'email',
         'age',
-        // 'followed',
     ];
 
     public function books(): HasMany
@@ -29,7 +28,7 @@ class Author extends Model
     {
         return $this->belongsToMany(User::class,'follows')
             // ->withPivot('reservations')
-            ->wherePivot('user_id', auth()->user()->id)
-            ;
+            ->withPivot(['id'])
+        ->wherePivot('user_id', auth()->user()->id);
     }
 }

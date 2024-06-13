@@ -37,18 +37,16 @@ class ReservationController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request): RedirectResponse
-    // public function store(Request $request, Book $book)
     {
-             $validated = $request->validate([
-            'book_id' => ['required', 'integer', 'min:1', 'max:18446744073709551615', 'exists:books,id',
-                        Rule::unique('reservations')->where(fn (Builder $query) =>
-                        $query->where('user_id', auth()->user()->id))],
+        $validated = $request->validate([
+        'book_id' => ['required', 'integer', 'min:1', 'max:18446744073709551615', 'exists:books,id',
+                    Rule::unique('reservations')->where(fn (Builder $query) =>
+                    $query->where('user_id', auth()->user()->id))],
       ]);
 
         auth()->user()->reservations()->attach($request->book_id);
         
         return redirect(route('reservations.index'));
-        // return $validated;
     }
 
     /**

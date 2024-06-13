@@ -8,6 +8,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\Rule;
+use Illuminate\Database\Query\Builder;
 
 class FollowController extends Controller
 {
@@ -16,8 +18,8 @@ class FollowController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('Follows/Index', [
-            'followedAuthors' => Author::with('follows')->get(),
+        return Inertia::render('Authors/Follows', [
+            'followedAuthors' => auth()->user()->follows()->get(),
         ]);
     }
 
@@ -35,10 +37,12 @@ class FollowController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-//
+        'author_id' => ['required', 'integer', 'min:1', 'max:18446744073709551615', 'exists:authors,id',
+                       Rule::unique('follows')->where(fn (Builder $query) =>
+                       $query->where('user_id', auth()->user()->id))],
         ]);
 
-        Follow::create($validated);
+        auth()->user()->follows()->attach($request->author_id);
 
         return redirect(route('follows.index'));
     }
@@ -70,8 +74,10 @@ class FollowController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Follow $follow)
+    public function destroy(Follow $follow): RedirectResponse
     {
-        //
+        $follow->delete();
+
+        return redirect(route('authors.index'));
     }
 }
